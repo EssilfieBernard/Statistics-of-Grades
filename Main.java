@@ -1,28 +1,31 @@
-import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        int[] scores = {2, 20, 21, 22, 23, 30, 48, 49, 50, 55, 60, 65, 72, 63, 76, 80, 68, 90, 85, 98};
+        Scanner scanner = new Scanner(System.in);
 
-        // Prints the maximum, minimum and average of scores of students
-        System.out.println("Values:");
-        System.out.println();
-        System.out.println("The maximum grade is " + maximumGrade(scores));
-        System.out.println("The minimum grade is " + minimumGrade(scores));
-        System.out.println("The average grade is " + averageGrade(scores));
+        // Get length of array(number of students in class)
+        int length = getInput(scanner, "How many students are in the class?");
+        int[] scores = new int[length];
+
+        // Get user input(grades of students)
+        System.out.println("Enter grades of students");
+        for (int i = 0; i < length; i++) {
+            scores[i] = getInput(scanner,   "Grade of student " + (i + 1) + " -> ");
+        }
+        printStatistics(scores);
+
+        // initializes the stats array
         int[] stats = new int[5];
 
-        stats[0] = counter(scores, 0, 20);
-        stats[1] = counter(scores, 21, 40);
-        stats[2] = counter(scores, 41, 60);
-        stats[3] = counter(scores, 61, 80);
-        stats[4] = counter(scores, 81, 100);
+        // assigns values to the stats array
+        populateStats(stats, scores);
+
+        // General output format
         System.out.println();
         System.out.println("Graph");
         System.out.println();
-        System.out.println(Arrays.toString(stats));
-
 
         // loop for printing graph
         // loops over the stats array from the maximum of the array to 1
@@ -30,6 +33,53 @@ public class Main {
             System.out.println(i + " >  " + print(stats[0] >= i) + "  " + print(stats[1] >= i) + "  " + print(stats[2] >= i) + "  " + print(stats[3] >= i) + "  " + print(stats[4] >= i));
 
         }
+    }
+
+
+
+    // Function to accept input from user and return it.
+    private static int getInput(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+
+        while (!scanner.hasNextInt()) {
+            System.out.println("Invalid input. Please enter an integer.");
+            System.out.print(prompt);
+            scanner.next(); // Discards the invalid input
+        }
+
+        int input = scanner.nextInt();
+
+        // Check if the input is less than or equal to 100
+        while (input > 100) {
+            System.out.println("Input must be less than or equal to 100. Please try again.");
+            System.out.print(prompt); // Prompt the user again
+            while (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter an integer.");
+                System.out.print(prompt);
+                scanner.next(); // Discards the invalid input
+            }
+            input = scanner.nextInt();
+        }
+
+        return input;
+    }
+
+    // Populate stats array
+    private static void populateStats(int[] stats, int[] scores) {
+        stats[0] = counter(scores, 0, 20); // returns the number of students who got grades between lower and upper bounds passed as arguments
+        stats[1] = counter(scores, 21, 40);
+        stats[2] = counter(scores, 41, 60);
+        stats[3] = counter(scores, 61, 80);
+        stats[4] = counter(scores, 81, 100);
+    }
+
+    // Prints the maximum, minimum and average of scores of students
+    private static void printStatistics(int[] scores) {
+        System.out.println("Values:");
+        System.out.println();
+        System.out.println("The maximum grade is " + maximumGrade(scores));
+        System.out.println("The minimum grade is " + minimumGrade(scores));
+        System.out.println("The average grade is " + averageGrade(scores));
     }
 
     // Helper function to determine what will be printed at a certain value
